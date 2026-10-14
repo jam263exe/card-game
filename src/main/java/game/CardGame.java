@@ -1,10 +1,20 @@
 package game;
+import cards.Deck;
+import cards.Card;
 
 public class CardGame {
 
     private volatile boolean gameOver = false;
-    public CardGame(){
+    // Number of players (referred to as n in comments)
+    private final int numPlayers;
+    // Initial collection of all 8n cards
+    private Deck pile;
 
+    public CardGame(int numPlayers) {
+        this.numPlayers = numPlayers;
+        pile = new Deck(numPlayers);
+        this.initialisePlayers();
+        this.initialiseDecks();
     }
 
     /**
