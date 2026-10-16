@@ -1,10 +1,11 @@
 package game;
 import cards.Deck;
 import java.lang.Thread;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CardGame {
 
-    private volatile boolean gameOver = false;
+    private volatile AtomicBoolean gameOver = new AtomicBoolean(false);
     // Number of players (referred to as n in comments)
     private final int numPlayers;
     // Initial collection of all 8n cards
