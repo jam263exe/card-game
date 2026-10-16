@@ -8,33 +8,21 @@ import java.util.ArrayList;
 
 public class Player {
     private final int playerId;
-    private Hand hand;
+    private final Hand hand;
     
     public Player(int playerId) {
         this.playerId = playerId;
         this.hand = new Hand();
     }
 
-    public applyDecks(Deck left, Deck right) {
-
-    }
-
+    /**
+     * Add a card to the player's hand.
+     * @param card
+     */
     public addCardToHand(Card card) {
-        // add a card to the player's hand
-        hand.add(card);
+        hand.addCard(card);
     }
 
-    //encapsulation below, player access only
-    private checkWin() { 
-        if (hand.size() != 4) return false; // must have 4 cards at all times
-        int firstCard = hand.get(0).getValue();
-        for (Card card : hand) {
-            if (card.getValue() != firstCard) return false; // iterates through hand, if any card is different, player has not won
-        }
-        return true;
-    }
-
-    private Random random = new Random();
 
     private Card discardUnpreferredCard() {
         List<Card> unpreferredCards = new ArrayList<>();

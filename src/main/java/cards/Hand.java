@@ -41,4 +41,22 @@ public class Hand {
         }
         throw new InvalidCardException(cardId);
     }
+
+    public void addCard(Card card) {
+        this.cards.add(card);
+    }
+
+    /**
+     * Keep this function in Hand - whether a hand is a winning one
+     * or not is a property of the Hand class not the player class.
+     */
+    public boolean checkWin() {
+        int firstCardVal = this.cards.getFirst().getValue();
+        for (int i=0; i<this.getSize(); i++) {
+            if (this.cards.get(i).getValue() != firstCardVal) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

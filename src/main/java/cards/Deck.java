@@ -46,7 +46,7 @@ public class Deck {
 
     /**
      * Add a card to the top of the deck
-     * @param card
+     * @param card Card
      */
     public void addCard(Card card) {
         this.cards.addLast(card);
