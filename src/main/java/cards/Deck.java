@@ -41,7 +41,7 @@ public class Deck {
      * @return Card
      */
     public Card drawCard() {
-        return this.cards.getFirst();
+        return this.cards.removeFirst();
     }
 
     /**

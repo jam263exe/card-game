@@ -1,44 +1,36 @@
 package game;
-import cards.Hand;
-import cards.Deck;
 import cards.Card;
-import java.util.List;
-import java.util.Random;
-import java.util.ArrayList;
+import cards.Deck;
+import cards.Hand;
 
-public class Player {
+
+public class Player implements Runnable {
     private final int playerId;
     private final Hand hand;
-    
-    public Player(int playerId) {
+    private final Deck drawDeck;
+    private final Deck discardDeck;
+
+    public Player(int playerId, Deck drawDeck, Deck discardDeck) {
         this.playerId = playerId;
         this.hand = new Hand();
+        this.drawDeck = drawDeck;
+        this.discardDeck = discardDeck;
     }
 
-    /**
-     * Add a card to the player's hand.
-     * @param card
-     */
-    public addCardToHand(Card card) {
-        hand.addCard(card);
+    public int getPlayerId() {
+        return this.playerId;
     }
 
+    public void acceptCard(Card card) {
+        this.hand.addCard(card);
+    }
 
-    private Card discardUnpreferredCard() {
-        List<Card> unpreferredCards = new ArrayList<>();
-        for (Card card : hand) {
-            if (card.getValue() != playerId) { // all cards not equal to playerId, put into list
-                unpreferredCards.add(card);
-            }
-        }
-        if (!unpreferredCards.isEmpty()) {
-            // discard a random unpreferred card, not of playerId
-            // this is required by spec to ensure game doesnt stagnate 
-            int randomIndex = random.nextInt(unpreferredCards.size());
-            Card cardToDiscard = unpreferredCards.get(randomIndex);
-            hand.remove(cardToDiscard);
-            return cardToDiscard;
-        }
+    public Card discardCard(int cardId) {
+        return hand.drawCard(cardId);
+    }
+
+    @Override
+    public void run() {
 
     }
 }
