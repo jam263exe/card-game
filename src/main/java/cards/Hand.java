@@ -1,4 +1,5 @@
 package cards;
+import cards.exceptions.GameAlreadyWonException;
 import cards.exceptions.InvalidCardException;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
@@ -42,6 +43,10 @@ public class Hand {
         throw new InvalidCardException(cardId);
     }
 
+    /**
+     * Add a card to the hand. Position is irrelevant.
+     * @param card Card
+     */
     public void addCard(Card card) {
         this.cards.add(card);
     }
@@ -58,5 +63,21 @@ public class Hand {
             }
         }
         return true;
+    }
+
+    /**
+     * Gets the cardId of a card from the hand, which is of a different
+     * denomination to the preferred one.
+     * @param preferredDenomination integer value denoting the preferred
+     *                              card denomination.
+     * @return a cardId.
+     */
+    public int getUnpreferredCardId(int preferredDenomination) {
+        for (int i=0; i<this.getSize(); i++) {
+            if (this.cards.get(i).getValue() != preferredDenomination) {
+                return this.cards.get(i).getCardId();
+            }
+        }
+        throw new GameAlreadyWonException();
     }
 }

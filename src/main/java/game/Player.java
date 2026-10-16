@@ -21,12 +21,16 @@ public class Player implements Runnable {
         return this.playerId;
     }
 
-    public void acceptCard(Card card) {
+    private void acceptCard(Card card) {
         this.hand.addCard(card);
     }
 
-    public Card discardCard(int cardId) {
+    private Card discardCard(int cardId) {
         return hand.drawCard(cardId);
+    }
+
+    private atomicDrawDiscard(int cardId) {
+
     }
 
     @Override
