@@ -1,5 +1,7 @@
 package cards;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Deck {
 
@@ -18,11 +20,21 @@ public class Deck {
     }
 
     public Card drawCard() {
+        return cards.take(); // thread safe, take blocks if empty
+    }
 
+    public void addCard(Card card) {
+        cards.offer(card); // thread safe, offer blocks if full
     }
 
     /**
      * Get integer values of all the cards in this deck.
      */
-    public getCards()
+    public List<Integer> getCards() {
+        List<Integer> cardValues = new ArrayList<>(); // create a returnable empty list
+        for (Card card : cards) {
+            cardValues.add(card.getValue()); // add the value of each card to the list
+        }
+        return cardValues;
+    }
 }
