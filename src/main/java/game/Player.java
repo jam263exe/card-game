@@ -8,18 +8,14 @@ import java.util.ArrayList;
 public class Player {
     private final int playerId;
     private List<Card> hand;
-    // reference to decks either side of this player
-    private Deck deckToLeft;
-    private Deck deckToRight;
-
     
     public Player(int playerId) {
         this.playerId = playerId;
+
     }
 
     public applyDecks(Deck left, Deck right) {
-        this.deckToLeft = left;
-        this.deckToRight = right;
+
     }
 
     public addCardToHand(Card card) {

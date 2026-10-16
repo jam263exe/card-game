@@ -1,40 +1,53 @@
 package cards;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Deck {
 
-    LinkedBlockingQueue<Card> cards;
+    private final ArrayDeque<Card> cards;
     /**
-     * Use this type of thread safe queue:
-     * <a href="https://www.geeksforgeeks.org/java/linkedblockingqueue-class-in-java/">ref</a>
-     * We are using offer and take rather than add and remove here
-     * as they wait until the queue enters a valid state for the operation
-     * to run rather than throwing an exception (eg. another player empties
-     * the deck, and now we need to wait until there is another card in the
-     * deck before we can take a card.)
+     * CHANGE OF PLANS - we are no longer using LinkedBlockingQueue
+     * as we need discard and take to be TOGETHER one atomic action.
+     * We're going to use ArrayDeque - essentially a double-ended
+     * queue which allows us to add and remove from the front and
+     * back in O(1) time:
+     * <a href="https://www.geeksforgeeks.org/java/arraydeque-in-java/">ref</a>
+     * We will manually lock both decks involved in the take/discard
+     * transaction now as this is not inherently thread-safe.
      */
+    private final int deckId;
+    private ReentrantLock lock;
+
     public Deck(int deckId) {
-        cards = new LinkedBlockingQueue<Card>();
-    }
-
-    public Card drawCard() {
-        return cards.take(); // thread safe, take blocks if empty
-    }
-
-    public void addCard(Card card) {
-        cards.offer(card); // thread safe, offer blocks if full
+        this.deckId = deckId;
+        this.cards = new ArrayDeque<Card>();
+        this.lock = new ReentrantLock();
     }
 
     /**
-     * Get integer values of all the cards in this deck.
+     * Return the lock so we can lock/unlock the Deck object in the
+     * player's thread in CardGame. We can't lock it from inside
+     * this class as the player thread needs exclusive access to
+     * both the deck to their left and to their right.
+     * @return ReentrantLock
      */
-    public List<Integer> getCards() {
-        List<Integer> cardValues = new ArrayList<>(); // create a returnable empty list
-        for (Card card : cards) {
-            cardValues.add(card.getValue()); // add the value of each card to the list
-        }
-        return cardValues;
+    public ReentrantLock getLock() {
+        return lock;
+    }
+
+    /**
+     * Takes the top card from the deck.
+     * @return Card
+     */
+    public Card drawCard() {
+        return this.cards.getFirst();
+    }
+
+    /**
+     * Add a card to the top of the deck
+     * @param card
+     */
+    public void addCard(Card card) {
+        this.cards.addLast(card);
     }
 }
