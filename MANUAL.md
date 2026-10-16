@@ -2,18 +2,18 @@
 <h2>Implementation Strategy</h2>
 <h3>CardGame Structure</h3>
 <p>
-The threads, hands, and decks are stored in arrays. Players
+The threads, and decks are stored in arrays. Players
 are instantiated within the threads. Awareness of players'
 positions relative to the hands and decks is provided by
-playerId, deckId, and handId (indexed from 0.)
+playerId and deckId.
 </p>
 <p>
 For a game 
-with 5 or more players, playerId 3 would be associated with 
-handId 3 and deckIds 2 and 4. In the edge case that the game 
-had 4 players, playerId 3 would be associated with handId 3 
-and deckIds 0 and 2. playerId 0 would be associated with handId
-0, and deckIds 3 and 1. This is to preserve the ring structure.
+with 5 or more players, playerId 3 would be associated with
+deckIds 2 and 4. In the edge case that the game 
+had 4 players, playerId 3 would be associated with 
+and deckIds 0 and 2. playerId 0 would be associated with 
+deckIds 3 and 1. This is to preserve the ring structure.
 </p>
 <p>
 All of this game logic is managed by the CardGame class. Other
@@ -72,7 +72,4 @@ Cards in the hand are stored in an ArrayList structure. This
 differs to the Deck class, as players need to be able to access
 all cards at once and operate on cards in different places than
 just the tail ends of the hand. 
-</p>
-<p>
-Each hand has a handId for the same reasons as the Deck class.
 </p>

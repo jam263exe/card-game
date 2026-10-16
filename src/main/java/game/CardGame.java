@@ -14,8 +14,6 @@ public class CardGame {
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
         this.threads = new Thread[numPlayers];
-
-        threads[0].start();
     }
 
     private void initializeThreads() {

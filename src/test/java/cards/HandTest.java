@@ -6,7 +6,7 @@ public class HandTest {
     private Hand hand;
 
     public HandTest() {
-        hand = new Hand(0);
+        hand = new Hand();
     }
 
     @Test

@@ -1,4 +1,5 @@
 package game;
+import cards.Hand;
 import cards.Deck;
 import cards.Card;
 import java.util.List;
@@ -7,11 +8,11 @@ import java.util.ArrayList;
 
 public class Player {
     private final int playerId;
-    private List<Card> hand;
+    private Hand hand;
     
     public Player(int playerId) {
         this.playerId = playerId;
-
+        this.hand = new Hand();
     }
 
     public applyDecks(Deck left, Deck right) {

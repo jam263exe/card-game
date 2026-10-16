@@ -16,6 +16,7 @@ public class Deck {
      * transaction now as this is not inherently thread-safe.
      */
     private final int deckId;
+    // https://www.baeldung.com/java-concurrent-locks
     private ReentrantLock lock;
 
     public Deck(int deckId) {

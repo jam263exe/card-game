@@ -11,13 +11,9 @@ public class Hand {
      * for taking from the ends of the deque.
      */
     private final ArrayList<Card> cards;
-    private final int handId;
-    // https://www.baeldung.com/java-concurrent-locks
 
-    public Hand(int handId) {
-        this.handId = handId;
+    public Hand() {
         this.cards = new ArrayList<Card>();
-        this.lock = new ReentrantLock();
     }
 
     /**
@@ -26,10 +22,6 @@ public class Hand {
      */
     private int getSize() {
         return this.cards.size();
-    }
-
-    public int getHandId() {
-        return handId;
     }
 
     /**
