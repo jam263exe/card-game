@@ -2,6 +2,9 @@ package game;
 import cards.Card;
 import cards.Deck;
 import cards.Hand;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -58,23 +61,78 @@ public class Player implements Runnable {
      * the hand size changing.
      */
     private void atomicDrawDiscard() {
+        //draw card
+        Card drawnCard = this.drawDeck.drawCard();
+        this.hand.addCard(drawnCard);
+
+        //discard unpreferred card
         int unpreferredCardId = this.hand.getUnpreferredCardId(this.playerId);
-        this.discardDeck.addCard(this.hand.drawCard(unpreferredCardId));
-        this.hand.addCard(drawDeck.drawCard());
+        Card discardedCard = this.hand.drawCard(unpreferredCardId);
+        this.discardDeck.addCard(discardedCard);
+
+        //log actions to file
+        logToFile("player " + this.playerId + " draws a " + drawnCard.getValue() + " from deck " + this.drawDeck.getDeckId());
+        logToFile("player " + this.playerId + " discards a " + discardedCard.getValue() + " to deck " + this.discardDeck.getDeckId());
+        logToFile("player " + this.playerId + " current hand is " + this.hand.getHandString());
     }
 
     @Override
     public void run() {
+        logToFile("player " + this.playerId + " initial hand " + this.hand.getHandString());
+
+        //check for win
+        if (this.hand.checkWin()) {
+            logToFile("player " + this.playerId + " wins");
+            gameOver.set(true);
+            return;
+        }
         while (!gameOver.get()) {
+            this.drawLock.lock();
+            this.discardLock.lock();
+
             try {
-                this.drawLock.lock();
-                this.discardLock.lock();
+                if (this.gameOver.get()) {
+                    break; //ensure player hasnt lost whilst waiting for lock
+                }
+
                 this.atomicDrawDiscard();
+
+                if (this.hand.checkWin()) {
+                    logToFile("player " + this.playerId + " wins");
+                    System.out.println("player " + this.playerId + " wins");
+                }
             }
             finally {
                 this.drawLock.unlock();
                 this.discardLock.unlock();
             }
+        }
+
+        //game over, so log final hand
+        if (!this.hand.checkWin()) {
+            logToFile("player " + this.playerId + " has been informed that another player has won");
+        }
+        logToFile("player " + this.playerId + " exits");
+        logToFile("player " + this.playerId + " final hand: " + this.hand.getHandString());
+        
+    }
+
+     /**
+     * Generates fileName based on the thread executing as required by spec.
+     * Uses FileWriter and true argument to append the text to end of
+     * the file. It writes the passed message string, newline and closes file.
+     * Located in Player class as it is a property of the player to log their actions.
+     */
+
+    private void logToFile(String message) {
+        try {
+            String fileName = "player" + this.playerId + "_output.txt";
+            FileWriter writer = new FileWriter(fileName, true);
+            writer.write(message + "\n");
+            writer.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
