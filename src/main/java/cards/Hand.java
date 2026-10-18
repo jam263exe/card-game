@@ -2,7 +2,11 @@ package cards;
 import cards.exceptions.GameAlreadyWonException;
 import cards.exceptions.InvalidCardException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.smartcardio.Card;
 
 public class Hand {
     /**
@@ -67,17 +71,26 @@ public class Hand {
 
     /**
      * Gets the cardId of a card from the hand, which is of a different
-     * denomination to the preferred one.
+     * denomination to the preferred one and randomly chooses from the unpreferred list.
      * @param preferredDenomination integer value denoting the preferred
      *                              card denomination.
      * @return a cardId.
      */
+    private Random random = new Random();
+
     public int getUnpreferredCardId(int preferredDenomination) {
-        for (int i=0; i<this.getSize(); i++) {
-            if (this.cards.get(i).getValue() != preferredDenomination) {
-                return this.cards.get(i).getCardId();
+        List<Card> unpreferredCards = new ArrayList<>();
+        for (Card card : this.cards) {
+            if (card.getValue() != preferredDenomination) {
+                unpreferredCards.add(card);
             }
+        }
+        if (!unpreferredCards.isEmpty()) {
+            int randomIndex = this.random.nextInt(unpreferredCards.size());
+            return unpreferredCards.get(randomIndex).getCardId();
         }
         throw new GameAlreadyWonException();
     }
-}
+
+  
+    }
