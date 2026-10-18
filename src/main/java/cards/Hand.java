@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.smartcardio.Card;
-
 public class Hand {
     /**
      * Use ArrayList so we can see all cards at once and discard
@@ -76,7 +74,7 @@ public class Hand {
      *                              card denomination.
      * @return a cardId.
      */
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public int getUnpreferredCardId(int preferredDenomination) {
         List<Card> unpreferredCards = new ArrayList<>();
@@ -92,5 +90,10 @@ public class Hand {
         throw new GameAlreadyWonException();
     }
 
-  
+    @Override
+    public String toString() {
+        String handString = "";
+        // LOGIC
+        return handString;
     }
+}

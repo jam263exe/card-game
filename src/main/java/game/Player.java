@@ -2,7 +2,6 @@ package game;
 import cards.Card;
 import cards.Deck;
 import cards.Hand;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,26 +60,26 @@ public class Player implements Runnable {
      * the hand size changing.
      */
     private void atomicDrawDiscard() {
-        //draw card
+        // Draw card
         Card drawnCard = this.drawDeck.drawCard();
         this.hand.addCard(drawnCard);
 
-        //discard unpreferred card
+        // Discard unpreferred card
         int unpreferredCardId = this.hand.getUnpreferredCardId(this.playerId);
         Card discardedCard = this.hand.drawCard(unpreferredCardId);
         this.discardDeck.addCard(discardedCard);
 
-        //log actions to file
+        // Log actions to file
         logToFile("player " + this.playerId + " draws a " + drawnCard.getValue() + " from deck " + this.drawDeck.getDeckId());
         logToFile("player " + this.playerId + " discards a " + discardedCard.getValue() + " to deck " + this.discardDeck.getDeckId());
-        logToFile("player " + this.playerId + " current hand is " + this.hand.getHandString());
+        logToFile("player " + this.playerId + " current hand is " + this.hand.toString());
     }
 
     @Override
     public void run() {
-        logToFile("player " + this.playerId + " initial hand " + this.hand.getHandString());
+        logToFile("player " + this.playerId + " initial hand " + this.hand.toString());
 
-        //check for win
+        // Check for win
         if (this.hand.checkWin()) {
             logToFile("player " + this.playerId + " wins");
             gameOver.set(true);
@@ -92,7 +91,8 @@ public class Player implements Runnable {
 
             try {
                 if (this.gameOver.get()) {
-                    break; //ensure player hasnt lost whilst waiting for lock
+                    // Ensure player hasn't lost whilst waiting for lock
+                    break;
                 }
 
                 this.atomicDrawDiscard();
@@ -108,12 +108,12 @@ public class Player implements Runnable {
             }
         }
 
-        //game over, so log final hand
+        // Game over, so log final hand
         if (!this.hand.checkWin()) {
             logToFile("player " + this.playerId + " has been informed that another player has won");
         }
         logToFile("player " + this.playerId + " exits");
-        logToFile("player " + this.playerId + " final hand: " + this.hand.getHandString());
+        logToFile("player " + this.playerId + " final hand: " + this.hand.toString());
         
     }
 
@@ -130,8 +130,7 @@ public class Player implements Runnable {
             FileWriter writer = new FileWriter(fileName, true);
             writer.write(message + "\n");
             writer.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

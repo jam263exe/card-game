@@ -2,16 +2,13 @@ package game;
 import cards.Deck;
 import java.lang.Thread;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.smartcardio.Card;
-
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.util.Scanner;
 
 public class CardGame {
 
-    private volatile AtomicBoolean gameOver = new AtomicBoolean(false);
+    private final AtomicBoolean gameOver = new AtomicBoolean(false);
     // Number of players (referred to as n in comments)
     private final int numPlayers;
     // Initial collection of all 8n cards
@@ -45,10 +42,10 @@ public class CardGame {
         for (int i = 0; i < this.numPlayers; i++) {
             Deck drawDeck = this.decks[i];
             Deck discardDeck = this.decks[(i + 1) % this.numPlayers]; 
-            this.players[i] = new Player(i + 1, drawDeck, discardDeck, this.gameOver, this); 
+            this.players[i] = new Player(i + 1, drawDeck, discardDeck, this.gameOver);
         }
 
-        //Deal first 4 cards to each player in round-robin
+        // Deal first 4 cards to each player in round-robin
         for (int round = 0; round < 4; round++) {
             for (int i = 0; i < this.numPlayers; i++) {
                 this.players[i].acceptCard(this.pack.drawCard());
@@ -57,11 +54,11 @@ public class CardGame {
     }
 
     /**
-     * Give remainingcards to decks in round-robin fashion AFTER
+     * Give remaining cards to decks in round-robin fashion AFTER
      * giving cards to players.
      */
     private void initializeDecks() {
-        //Deal remaining 4n cards to decks in round-robin
+        // Deal remaining 4n cards to decks in round-robin
         int remainingCards = this.numPlayers * 4;
         for (int i = 0; i < remainingCards; i++) {
             int deckIndex = i % this.numPlayers;
