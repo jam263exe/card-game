@@ -13,43 +13,31 @@ public class CardGame {
     private final int numPlayers;
     // Initial collection of all 8n cards
     private Deck pack;
+    private Deck[] decks;
     private Thread[] threads;
 
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
-        this.threads = new Thread[numPlayers];
-        this.players = new Player[numPlayers];
         this.decks = new Deck[numPlayers];
+        this.threads = new Thread[numPlayers];
+        this.initializeThreads();
     }
+
+    static void main(String[] args) {
+        for (int i = 0; i < this.numPlayers; i++) {
+            this.threads[i].start();
+        }
+    }
+
+
 
     private void initializeThreads() {
         this.threads = new Thread[this.numPlayers];
         for (int i = 0; i < this.numPlayers; i++) {
-            this.threads[i] = new Thread(this.players[i]);
-        }
-    }
-
-    /**
-     * Give cards to players in a round-robin fashion.
-     */
-    private void initializePlayers() {
-        //Ensure all decks are created so we can pass them to players
-        for (int i = 0; i < this.numPlayers; i++) {
-            this.decks[i] = new Deck(i + 1);
-        }
-
-        //Create players and assign their left (draw) and right (discard) decks
-        for (int i = 0; i < this.numPlayers; i++) {
-            Deck drawDeck = this.decks[i];
-            Deck discardDeck = this.decks[(i + 1) % this.numPlayers]; 
-            this.players[i] = new Player(i + 1, drawDeck, discardDeck, this.gameOver);
-        }
-
-        // Deal first 4 cards to each player in round-robin
-        for (int round = 0; round < 4; round++) {
-            for (int i = 0; i < this.numPlayers; i++) {
-                this.players[i].acceptCard(this.pack.drawCard());
-            }
+            int discardDeck = -1;
+            int drawDeck = -1;
+            
+            this.threads[i] = new Thread(new Player());
         }
     }
 
