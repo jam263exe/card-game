@@ -2,6 +2,7 @@ package cards;
 import java.util.ArrayDeque;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 public class Deck {
 
     private final ArrayDeque<Card> cards;
@@ -50,5 +51,15 @@ public class Deck {
      */
     public void addCard(Card card) {
         this.cards.addLast(card);
+    }
+
+    // Iterate through cards in deck to return string to store on output file
+    @Override
+    public String toString() {
+        StringBuilder deckString = new StringBuilder();
+        for (Card c : this.cards) {
+            deckString.append(c.getValue()).append(" ");
+        }
+        return deckString.toString().trim();
     }
 }

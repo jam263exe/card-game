@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 public class Hand {
     /**
      * Use ArrayList so we can see all cards at once and discard
@@ -90,10 +91,13 @@ public class Hand {
         throw new GameAlreadyWonException();
     }
 
+    // Lets Player access cards to print as string
     @Override
     public String toString() {
-        String handString = "";
-        // LOGIC
-        return handString;
+        StringBuilder handString = new StringBuilder();
+        for (Card c : this.cards) {
+            handString.append(c.getValue()).append(" ");
+        }
+        return handString.toString().trim();
     }
 }
