@@ -39,7 +39,7 @@ public class Player implements Runnable {
      * Accept a card by adding it to the hand.
      * @param card the card to accept.
      */
-    private void acceptCard(Card card) {
+    public void acceptCard(Card card) {
         this.hand.addCard(card);
     }
 

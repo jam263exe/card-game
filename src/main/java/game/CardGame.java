@@ -18,12 +18,32 @@ public class CardGame {
     // Number of players (referred to as n in comments)
     private final int numPlayers;
     // Initial collection of all 8n cards
-    private Pack pack;
+    private final Pack pack;
     private Thread[] threads;
+    // This array stores the players during initialization
+    // So that threads can be created with correct players
     private Player[] players;
-    private final Deck[] decks;
+    // MUST BE POPULATED INITIALLY BEFORE PLAYERS ARRAY
+    private Deck[] decks;
 
-
+    /**
+     * Initialization MUST happen in the following order:
+     * The pack of cards is created and loaded from the file.
+     * Next the decks array is populated with empty decks.
+     * Now that we have a load of empty decks, we can add the
+     * players to the players array and pass the references to
+     * the actual deck objects as parameters into the players'
+     * draw and discard decks.
+     * Then players need to be dealt their cards from the pack
+     * in a round-robin fashion.
+     * The decks are then given cards in the same way.
+     * Finally, the threads containing the players can be created.
+     * @param numPlayers
+     * @param path
+     * @throws FileNotFoundException
+     * @throws PackInitializationError
+     * @throws InvalidPackException
+     */
     public CardGame(int numPlayers, String path) throws
             FileNotFoundException,
             PackInitializationError,
@@ -31,9 +51,66 @@ public class CardGame {
     {
         this.numPlayers = numPlayers;
         this.pack = new Pack(numPlayers, path);
-        this.decks = new Deck[numPlayers];
-        this.threads = new Thread[numPlayers];
+
+        this.initializeDecks();
+        this.initializePlayers();
+        this.dealToPlayers();
+        this.dealToDecks();
         this.initializeThreads();
+    }
+
+    private void initializeDecks() {
+        this.decks = new Deck[numPlayers];
+        for (int i=0; i<numPlayers; i++) {
+            this.decks[i] = new Deck(i);
+        }
+    }
+
+    private void initializePlayers() {
+        this.players = new Player[numPlayers];
+        // Get correct circular discard and draw indexes
+        for (int i = 0; i < this.numPlayers; i++) {
+            int discardDeckIdx = -1;
+            int drawDeckIdx = -1;
+
+            if (i == 0) {
+                drawDeckIdx = 0;
+                discardDeckIdx = this.numPlayers - 1;
+            }
+            else if (i == this.numPlayers - 1) {
+                drawDeckIdx = 0;
+                discardDeckIdx = this.numPlayers - 2;
+            } else {
+                drawDeckIdx = i;
+                discardDeckIdx = i - 1;
+            }
+
+            // Add the players to the initial players array
+            this.players[i] = new Player(
+                    i,
+                    decks[drawDeckIdx],
+                    decks[discardDeckIdx],
+                    this.gameOver
+            );
+        }
+    }
+
+    /**
+     * Deal cards to players in round-robin fashion.
+     */
+    private void dealToPlayers() {
+        for (int i=0; i<this.numPlayers*4; i++) {
+            this.players[i%4].acceptCard(pack.drawCard());
+        }
+    }
+
+    /**
+     * Deal cards to decks in round-robin fashion.
+     */
+    private void dealToDecks() {
+        for (int i=0; i<this.numPlayers*4; i++) {
+            this.decks[i%4].addCard(pack.drawCard());
+        }
     }
 
     static void main(String[] args) throws
@@ -104,19 +181,6 @@ public class CardGame {
                     this.decks[discardDeckIdx],
                     this.gameOver
             ));
-        }
-    }
-
-    /**
-     * Give remaining cards to decks in round-robin fashion AFTER
-     * giving cards to players.
-     */
-    private void initializeDecks() {
-        // Deal remaining 4n cards to decks in round-robin
-        int remainingCards = this.numPlayers * 4;
-        for (int i = 0; i < remainingCards; i++) {
-            int deckIndex = i % this.numPlayers;
-            this.decks[deckIndex].addCard(this.pack.drawCard());
         }
     }
 

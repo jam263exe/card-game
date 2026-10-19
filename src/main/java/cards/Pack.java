@@ -2,6 +2,7 @@ package cards;
 
 import cards.exceptions.InvalidPackException;
 import cards.exceptions.PackInitializationError;
+import game.Player;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,8 +40,7 @@ public class Pack extends Deck {
     private void loadFromFile(String path, int numPlayers) throws
             InvalidPackException,
             PackInitializationError,
-            FileNotFoundException
-    {
+            FileNotFoundException {
         File file = new File(path);
         Scanner scanner = null;
 
