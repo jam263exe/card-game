@@ -68,22 +68,10 @@ public class CardGame {
 
     private void initializePlayers() {
         this.players = new Player[numPlayers];
-        // Get correct circular discard and draw indexes
         for (int i = 0; i < this.numPlayers; i++) {
-            int discardDeckIdx = -1;
-            int drawDeckIdx = -1;
-
-            if (i == 0) {
-                drawDeckIdx = 0;
-                discardDeckIdx = this.numPlayers - 1;
-            }
-            else if (i == this.numPlayers - 1) {
-                drawDeckIdx = 0;
-                discardDeckIdx = this.numPlayers - 2;
-            } else {
-                drawDeckIdx = i;
-                discardDeckIdx = i - 1;
-            }
+            // Player i draws from deck i, and discards to the previous deck circularly
+            int drawDeckIdx = i;
+            int discardDeckIdx = (i - 1 + this.numPlayers) % this.numPlayers;
 
             // Add the players to the initial players array
             this.players[i] = new Player(
@@ -140,6 +128,7 @@ public class CardGame {
         // Input pack location request
         boolean packLoader = false;
         while (!packLoader) {
+            cli.nextLine();
             System.out.println("Please enter location of pack to load: ");
             String packLocation = cli.nextLine();
             try {
@@ -162,7 +151,7 @@ public class CardGame {
     private void initializeThreads() {
         this.threads = new Thread[this.numPlayers];
         for (int i=0; i<this.numPlayers; i++) {
-            this.threads[i] = new Thread(players[i]);
+            this.threads[i] = new Thread(this.players[i]);
         }
     }
 

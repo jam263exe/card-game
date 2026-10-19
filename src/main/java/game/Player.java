@@ -100,6 +100,8 @@ public class Player implements Runnable {
                 if (this.hand.checkWin()) {
                     logToFile("player " + this.playerId + " wins");
                     System.out.println("player " + this.playerId + " wins");
+                    this.gameOver.set(true);
+                    break;
                 }
             }
             finally {
