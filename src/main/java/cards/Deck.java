@@ -45,6 +45,10 @@ public class Deck {
         return this.cards.removeFirst();
     }
 
+    public boolean isEmpty() {
+        return this.cards.isEmpty();
+    }
+
     /**
      * Add a card to the top of the deck
      * @param card Card

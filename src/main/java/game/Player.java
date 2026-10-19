@@ -60,6 +60,12 @@ public class Player implements Runnable {
      * the hand size changing.
      */
     private void atomicDrawDiscard() {
+
+        // Prevent drawing from empty decks
+        if (this.drawDeck.isEmpty()) {
+            return;
+        }
+
         // Draw card
         Card drawnCard = this.drawDeck.drawCard();
         this.hand.addCard(drawnCard);
@@ -86,6 +92,14 @@ public class Player implements Runnable {
             return;
         }
         while (!gameOver.get()) {
+
+            // Check for win
+            if (this.hand.checkWin()) {
+                logToFile("player " + this.playerId + " wins");
+                gameOver.set(true);
+                return;
+            }
+
             this.drawLock.lock();
             this.discardLock.lock();
 
