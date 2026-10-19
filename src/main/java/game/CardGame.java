@@ -2,7 +2,12 @@ package game;
 import cards.Deck;
 import java.lang.Thread;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.smartcardio.Card;
+
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.File;
 import java.util.Scanner;
 
@@ -14,6 +19,8 @@ public class CardGame {
     // Initial collection of all 8n cards
     private Deck pack;
     private Thread[] threads;
+    private Player[] players;
+    private Deck[] decks;
 
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
@@ -108,4 +115,38 @@ public class CardGame {
         if (cardCounter != expectedCards) {
             throw new IllegalArgumentException("Wrong number of cards in pack.");        }
     }
+
+    public void startGame() {
+        this.initializeDecks();
+        this.initializePlayers();
+        this.initializeThreads();
+
+        // Start all player threads
+        for (Thread thread : this.threads) {
+            thread.start();
+        }
+
+        // Wait for all players threads to finish
+        for (Thread thread : this.threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        this.printFinalDecks(); // Print final deck contents
+    }
+
+    // Print final deck files for each player
+        private void printFinalDecks() {
+            try {
+                String fileName = "deck" + deck.getDeckId() + "_output.txt";
+                FileWriter writer = new FileWriter(fileName);
+                writer.write("deck" + deck.getDeckId() + " contents: " + deck.toString() + "\n");
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 }
