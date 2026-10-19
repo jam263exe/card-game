@@ -100,7 +100,7 @@ public class CardGame {
      */
     private void dealToPlayers() {
         for (int i=0; i<this.numPlayers*4; i++) {
-            this.players[i%4].acceptCard(pack.drawCard());
+            this.players[i%this.numPlayers].acceptCard(pack.drawCard());
         }
     }
 
@@ -109,7 +109,7 @@ public class CardGame {
      */
     private void dealToDecks() {
         for (int i=0; i<this.numPlayers*4; i++) {
-            this.decks[i%4].addCard(pack.drawCard());
+            this.decks[i%this.numPlayers].addCard(pack.drawCard());
         }
     }
 
@@ -143,14 +143,16 @@ public class CardGame {
             System.out.println("Please enter location of pack to load: ");
             String packLocation = cli.nextLine();
             try {
-                game = new CardGame(players, "pack-test.txt");
+                game = new CardGame(players, packLocation);
                 packLoader = true;
-            
+                game.startGame();
+
             } catch (Exception e) {
                 System.out.println(e.getMessage() + "Please try again.");
             }
         }
         cli.close();
+
     }
 
     /**
@@ -159,34 +161,12 @@ public class CardGame {
      */
     private void initializeThreads() {
         this.threads = new Thread[this.numPlayers];
-        for (int i = 0; i < this.numPlayers; i++) {
-            int discardDeckIdx = -1;
-            int drawDeckIdx = -1;
-
-            if (i == 0) {
-                drawDeckIdx = 0;
-                discardDeckIdx = this.numPlayers - 1;
-            }
-            else if (i == this.numPlayers - 1) {
-                drawDeckIdx = 0;
-                discardDeckIdx = this.numPlayers - 2;
-            } else {
-                drawDeckIdx = i;
-                discardDeckIdx = i - 1;
-            }
-
-            this.threads[i] = new Thread(new Player(
-                    i,
-                    this.decks[drawDeckIdx],
-                    this.decks[discardDeckIdx],
-                    this.gameOver
-            ));
+        for (int i=0; i<this.numPlayers; i++) {
+            this.threads[i] = new Thread(players[i]);
         }
     }
 
     public void startGame() {
-        this.initializeDecks();
-
         // Start all player threads
         for (Thread thread : this.threads) {
             thread.start();
