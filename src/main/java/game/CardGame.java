@@ -2,14 +2,12 @@ package game;
 import cards.Deck;
 import java.lang.Thread;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.smartcardio.Card;
-
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 import java.util.Scanner;
+import cards.Card;
 
 public class CardGame {
 
@@ -18,7 +16,6 @@ public class CardGame {
     private final int numPlayers;
     // Initial collection of all 8n cards
     private Deck pack;
-    private Deck[] decks;
     private Thread[] threads;
     private Player[] players;
     private Deck[] decks;
@@ -31,9 +28,38 @@ public class CardGame {
     }
 
     static void main(String[] args) {
-        for (int i = 0; i < this.numPlayers; i++) {
-            this.threads[i].start();
+        int players = 0;
+
+        // Input number of players request
+        Scanner cli = new Scanner(System.in);
+        while (players < 1) {
+            System.out.print("Please enter the number of players: ");
+            if (cli.hasNextInt()) {
+                players = cli.nextInt();
+                if (players < 1) {
+                    System.out.println("Number of players must be positive integer.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a positive integer.");
+                cli.next(); // Clear the invalid input
+            }
         }
+        CardGame game = new CardGame(players);
+
+        // Input pack location request
+        boolean packLoader = false;
+        while (!packLoader) {
+            System.out.println("Please enter location of pack to load: ");
+            String packLocation = cli.nextLine();
+            try {
+                game.loadPack(packLocation);
+                packLoader = true;
+            
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + "Please try again.");
+            }
+        }
+        cli.close();
     }
 
 
