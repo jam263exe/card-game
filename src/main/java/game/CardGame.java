@@ -18,7 +18,7 @@ public class CardGame {
     private Deck pack;
     private Thread[] threads;
     private Player[] players;
-    private Deck[] decks;
+    private final Deck[] decks;
 
     public CardGame(int numPlayers) {
         this.numPlayers = numPlayers;
@@ -67,10 +67,27 @@ public class CardGame {
     private void initializeThreads() {
         this.threads = new Thread[this.numPlayers];
         for (int i = 0; i < this.numPlayers; i++) {
-            int discardDeck = -1;
-            int drawDeck = -1;
+            int discardDeckIdx = -1;
+            int drawDeckIdx = -1;
+
+            if (i == 0) {
+                drawDeckIdx = 0;
+                discardDeckIdx = this.numPlayers - 1;
+            }
+            else if (i == this.numPlayers - 1) {
+                drawDeckIdx = 0;
+                discardDeckIdx = this.numPlayers - 2;
+            } else {
+                drawDeckIdx = i;
+                discardDeckIdx = i - 1;
+            }
             
-            this.threads[i] = new Thread(new Player());
+            this.threads[i] = new Thread(new Player(
+                    i,
+                    this.decks[drawDeckIdx],
+                    this.decks[discardDeckIdx],
+                    this.gameOver
+            ));
         }
     }
 
@@ -132,7 +149,6 @@ public class CardGame {
 
     public void startGame() {
         this.initializeDecks();
-        this.initializePlayers();
         this.initializeThreads();
 
         // Start all player threads
@@ -153,7 +169,8 @@ public class CardGame {
     }
 
     // Print final deck files for each player
-        private void printFinalDecks() {
+    public void printFinalDecks() {
+        for (Deck deck : this.decks) {
             try {
                 String fileName = "deck" + deck.getDeckId() + "_output.txt";
                 FileWriter writer = new FileWriter(fileName);
@@ -163,4 +180,5 @@ public class CardGame {
                 e.printStackTrace();
             }
         }
+    }
 }

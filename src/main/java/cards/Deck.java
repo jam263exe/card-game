@@ -62,4 +62,8 @@ public class Deck {
         }
         return deckString.toString().trim();
     }
+
+    public int getDeckId() {
+        return deckId;
+    }
 }
