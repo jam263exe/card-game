@@ -23,7 +23,7 @@ public class Deck {
     public Deck(int deckId) {
         this.deckId = deckId;
         this.cards = new ArrayDeque<Card>();
-        this.lock = new ReentrantLock();
+        this.lock = new ReentrantLock(true);
     }
 
     /**

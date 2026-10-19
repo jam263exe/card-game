@@ -91,21 +91,30 @@ public class Player implements Runnable {
             gameOver.set(true);
             return;
         }
-        while (!gameOver.get()) {
+        while (!this.gameOver.get()) {
+            // Order locks by deckId in ascending order
+            ReentrantLock firstLock;
+            ReentrantLock secondLock;
 
-            // Check for win
-            if (this.hand.checkWin()) {
-                logToFile("player " + this.playerId + " wins");
-                gameOver.set(true);
-                return;
+            if (this.drawDeck.getDeckId() < this.discardDeck.getDeckId()) {
+                firstLock = this.drawLock;
+                secondLock = this.discardLock;
+            } else {
+                firstLock = this.discardLock;
+                secondLock = this.drawLock;
             }
 
-            this.drawLock.lock();
-            this.discardLock.lock();
+            firstLock.lock();
+            secondLock.lock();
 
             try {
                 if (this.gameOver.get()) {
-                    // Ensure player hasn't lost whilst waiting for lock
+                    break;
+                }
+
+                // Safeguard against empty deck exceptions
+                if (this.drawDeck.isEmpty()) {
+                    this.gameOver.set(true);
                     break;
                 }
 
@@ -119,8 +128,8 @@ public class Player implements Runnable {
                 }
             }
             finally {
-                this.drawLock.unlock();
-                this.discardLock.unlock();
+                secondLock.unlock();
+                firstLock.unlock();
             }
         }
 
