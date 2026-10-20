@@ -101,7 +101,7 @@ public class CardGame {
         }
     }
 
-    static void main(String[] args) throws
+    public static void main(String[] args) throws
             FileNotFoundException,
             PackInitializationError,
             InvalidPackException

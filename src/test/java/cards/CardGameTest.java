@@ -47,9 +47,9 @@ public class CardGameTest {
 
         AFTER RUNNING HERE ARE THE OUTPUT CONTENTS:
         -------------------deck0_output.txt-----------------------------
-        deck0 contents: 2 3 2 0
+        deck0 contents: 3 3 3 2 2
         -------------------deck1_output.txt-----------------------------
-        deck1 contents: 3 1 1 0 1
+        deck1 contents: 1 0 3 1
         -------------------deck2_output.txt-----------------------------
         deck2 contents: 2 1 1 0 2 2 2
         -------------------deck3_output.txt-----------------------------
@@ -61,20 +61,14 @@ public class CardGameTest {
         --------------------player0_output.txt--------------------------
         player 0 initial hand 0 3 0 3
         player 0 draws a 2 from deck 0
-        player 0 discards a 2 to deck 3
-        player 0 current hand is 0 3 0 3
-        player 0 draws a 2 from deck 0
         player 0 discards a 3 to deck 3
         player 0 current hand is 0 0 3 2
-        player 0 draws a 3 from deck 0
-        player 0 discards a 2 to deck 3
-        player 0 current hand is 0 0 3 3
-        player 0 draws a 3 from deck 0
+        player 0 draws a 2 from deck 0
         player 0 discards a 3 to deck 3
-        player 0 current hand is 0 0 3 3
+        player 0 current hand is 0 0 2 2
         player 0 has been informed that another player has won
         player 0 exits
-        player 0 final hand: 0 0 3 3
+        player 0 final hand: 0 0 2 2
 
          */
 
