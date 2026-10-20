@@ -160,4 +160,9 @@ public class Player implements Runnable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return this.hand.toString();
+    }
 }

@@ -5,12 +5,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.File;
 import java.util.Scanner;
-import cards.Card;
+
 import cards.Pack;
 import cards.exceptions.InvalidPackException;
-import cards.exceptions.PackInitializationError;
+import cards.exceptions.PackInitializationException;
 
 public class CardGame {
 
@@ -41,12 +40,12 @@ public class CardGame {
      * @param numPlayers
      * @param path
      * @throws FileNotFoundException
-     * @throws PackInitializationError
+     * @throws PackInitializationException
      * @throws InvalidPackException
      */
     public CardGame(int numPlayers, String path) throws
             FileNotFoundException,
-            PackInitializationError,
+            PackInitializationException,
             InvalidPackException
     {
         this.numPlayers = numPlayers;
@@ -103,7 +102,7 @@ public class CardGame {
 
     public static void main(String[] args) throws
             FileNotFoundException,
-            PackInitializationError,
+            PackInitializationException,
             InvalidPackException
     {
         int players = 0;

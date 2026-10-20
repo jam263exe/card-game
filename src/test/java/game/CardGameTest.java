@@ -1,8 +1,6 @@
-package cards;
-import game.CardGame;
+package game;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;

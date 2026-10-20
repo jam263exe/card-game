@@ -35,4 +35,10 @@ public class DeckTest {
         Deck emptyDeck = new Deck(1);
         assertTrue(emptyDeck.isEmpty());
     }
+
+    @Test
+    public void testToString() {
+        // Should return "2 0 3 1"
+        assertEquals("2 0 3 1", this.deck.toString());
+    }
 }
