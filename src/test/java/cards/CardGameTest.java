@@ -185,6 +185,5 @@ public class CardGameTest {
             throw new RuntimeException(e);
         }
         System.out.println("Results saved to " + csvFilename);
-
     }
 }
