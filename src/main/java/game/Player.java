@@ -55,7 +55,7 @@ public class Player implements Runnable {
     /**
      * Draw and discard in one atomic action. it is important that
      * it executes in the order of getting the next unpreferred cardId,
-     * then withdrawing it, then finally adding another card to the
+     * then discarding it, then finally adding another card to the
      * hand. Other orders would cause issues with the cardId due to
      * the hand size changing.
      */
@@ -66,14 +66,15 @@ public class Player implements Runnable {
             return;
         }
 
-        // Draw card
-        Card drawnCard = this.drawDeck.drawCard();
-        this.hand.addCard(drawnCard);
-
         // Discard unpreferred card
         int unpreferredCardId = this.hand.getUnpreferredCardId(this.playerId);
         Card discardedCard = this.hand.drawCard(unpreferredCardId);
         this.discardDeck.addCard(discardedCard);
+
+        // Draw card
+        Card drawnCard = this.drawDeck.drawCard();
+        this.hand.addCard(drawnCard);
+
 
         // Log actions to file
         logToFile("player " + this.playerId + " draws a " + drawnCard.getValue() + " from deck " + this.drawDeck.getDeckId());
